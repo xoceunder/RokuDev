@@ -19,6 +19,10 @@ Function Init()
 	m.loadingIndicator=m.top.findNode("loadingIndicator")
 	m.loadingIndicator.opacity=0
 	
+    m.global.addFields({"config": {}})
+    m.global.unobserveField("config")
+    m.config = CreateObject("RoSGNode", "Config")
+	
 	m.ParseGrid=m.top.findnode("ParseGrid")
 	
 	'Create main labellist menu

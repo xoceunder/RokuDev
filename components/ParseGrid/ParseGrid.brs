@@ -3,23 +3,21 @@ End Function
 
 Function GetDataMovies()
 
-	jsonAsString = ReadAsciiFile("pkg:/json/feed-v1.json")
-	responseJSON = ParseJSON(jsonAsString)
-	
+	categoryList = getCategoryList("movies")
 	content=[]
 	CategoryNames=[]
-	numofcategories=responseJSON.Count()-1
+	numofcategories=categoryList.Count()-1
 	For c=0 To numofcategories
-	    print
-		CategoryNames.Push(responseJSON[c].category )
+		CategoryNames.Push(categoryList[c].title)
+		items = getMoviesByCategory(categoryList[c].id,"movies")
 		temparray=[]
-		if responseJSON[c].items <> invalid
-		For x=0 To responseJSON[c].items.Count()-1
-			itemAA=responseJSON[c].items[x]
+		if items <> invalid
+		  For x=0 To items.Count()-1
+			itemAA=items[x]
 		   	item={}
 		    item=itemAA
 			temparray.Push(item)
-		Next
+		  Next
 		end if
 		content.Push(temparray)
 	Next
@@ -52,4 +50,32 @@ Function GetDataMovies()
 		RowItems.AppendChild(row) 'Add each individual category of items
 	Next
 	m.top.content=RowItems 'set top content field to the entire screen's content which will cause the content observer to notice
+End Function
+
+Function getCategoryList(tipo) as object
+    url = m.global.config.base_url+"/api.php?cmd=category&type="+tipo
+	?url
+	readInternet=createObject("roUrlTransfer")
+	readInternet.setUrl(url)
+	source=readInternet.GetToString()
+	responseJSON = ParseJSON(source)
+    if responseJSON <> invalid then
+      return responseJSON
+    else
+      return []
+    end if
+End Function
+
+Function getMoviesByCategory(category,tipo) as object
+    url = m.global.config.base_url+"/api.php?cmd=content&type="+tipo+"&category="+category
+	?url
+	readInternet=createObject("roUrlTransfer")
+	readInternet.setUrl(url)
+	source=readInternet.GetToString()
+	responseJSON = ParseJSON(source)
+    if responseJSON <> invalid then
+      return responseJSON
+    else
+      return []
+    end if
 End Function
