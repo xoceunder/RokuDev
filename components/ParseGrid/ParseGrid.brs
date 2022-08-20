@@ -59,7 +59,7 @@ Function getCategoryList(tipo) as object
 	source=readInternet.GetToString()
 	responseJSON = ParseJSON(source)
     if responseJSON <> invalid then
-      return responseJSON
+      return responseJSON.content
     else
       return []
     end if
@@ -72,7 +72,7 @@ Function getMoviesByCategory(category,tipo) as object
 	source=readInternet.GetToString()
 	responseJSON = ParseJSON(source)
     if responseJSON <> invalid then
-      return responseJSON
+      return responseJSON.content
     else
       return []
     end if
